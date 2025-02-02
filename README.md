@@ -17,6 +17,9 @@ mise という tool を利用しています
 ```
 $ brew install mise
 
+$ mise install node@22.13.1
+$ mise use node@22.13.1
+
 $ mise install pnpm@[mise.toml pnpm version]
 $ mise use pnpm@[mise.toml pnpm version]
 
