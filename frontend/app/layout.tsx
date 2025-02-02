@@ -1,4 +1,6 @@
 import './globals.css'
+import "@mantine/core/styles.css";
+import { MantineProvider } from '@mantine/core';
 
 export default function RootLayout({
   children,
@@ -8,7 +10,9 @@ export default function RootLayout({
   return (
     <html lang="jp">
       <body>
-        {children}
+        <MantineProvider defaultColorScheme="light">
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );
