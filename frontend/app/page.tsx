@@ -1,8 +1,16 @@
-import { Container, Title, Button, Stack, Center } from '@mantine/core';
+import { Button, Center, Container, Stack, Title } from '@mantine/core'
 
 export default function Home() {
   return (
-    <Container size="sm" style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+    <Container
+      size="sm"
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+    >
       <Center>
         <Stack align="center">
           <Title order={1}>Web Application Template</Title>
@@ -15,5 +23,5 @@ export default function Home() {
         </Stack>
       </Center>
     </Container>
-  );
+  )
 }

@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack frontend",
     "build": "next build frontend",
     "start": "next start frontend",
-    "lint": "next lint frontend"
+    "lint": "next lint --fix frontend",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@mantine/core": "^7.16.2",
@@ -25,6 +26,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
+    "eslint-config-prettier": "^10.0.1",
+    "prettier": "^3.4.2",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "typescript": "^5"
   }
 }
