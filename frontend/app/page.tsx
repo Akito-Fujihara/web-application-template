@@ -1,7 +1,7 @@
 export default function Home() {
   return (
-    <div>
-      <h1>Web Application Template</h1>
+    <div className="flex items-center justify-center h-screen">
+      <h1 className="text-3xl font-bold underline">Web Application Template</h1>
     </div>
   );
 }
