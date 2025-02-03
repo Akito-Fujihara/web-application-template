@@ -3,6 +3,7 @@ import "./model.tsp";
 
 @service({
     name: "publicapi",
+    title: "Public API",
 })
 namespace publicapi;
 

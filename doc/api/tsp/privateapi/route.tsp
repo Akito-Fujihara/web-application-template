@@ -3,6 +3,7 @@ import "./model.tsp";
 
 @service({
     name: "privateapi",
+    title: "Private API",
 })
 
 namespace privateapi;
