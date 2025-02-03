@@ -14,6 +14,10 @@
 
 で実装された Web アプリケーションの雛形です
 
+## API スキーマ
+- OpenAPI
+  - TypeSpec
+
 # 環境構築
 
 mise という tool を利用しています
@@ -21,8 +25,11 @@ mise という tool を利用しています
 ```
 $ brew install mise
 
-$ mise install node@22.13.1
-$ mise use node@22.13.1
+$ mise install direnv@[mise.toml direnv version]
+$ mise use direnv@[mise.toml direnv version]
+
+$ mise install node@[mise.toml node version]
+$ mise use node@[mise.toml node version]
 
 $ mise install pnpm@[mise.toml pnpm version]
 $ mise use pnpm@[mise.toml pnpm version]
