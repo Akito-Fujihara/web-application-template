@@ -11,6 +11,12 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+  {
+    ignores: [
+      'frontend/src/hooks/public/clients/*',
+      'frontend/src/hooks/private/clients/*',
+    ],
+  },
 ]
 
 export default eslintConfig
