@@ -49,6 +49,11 @@ pnpm の install
 $ pnpm install
 ```
 
+go の install
+```
+$ go mod tidy
+```
+
 ## コンテナの起動
 mysql などコンテナを設定
 ```
