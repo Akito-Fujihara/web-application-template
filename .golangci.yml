@@ -1,0 +1,25 @@
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  gocyclo:
+    min-complexity: 10
+
+  govet:
+    enable:
+      - shadow
+
+  staticcheck:
+    checks: ['all']
+
+linters:
+  enable:
+    - errcheck
+    - gocyclo
+    - govet
+    - staticcheck
+    - unused # 未使用のコードを警告
+    - gofmt # コードフォーマットチェック
+    - ineffassign # 不要な代入をチェック
+    - misspell # スペルミスを検出
