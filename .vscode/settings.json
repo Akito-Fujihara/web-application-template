@@ -1,4 +1,7 @@
 {
+  "files.associations": {
+    ".envrc": "shellscript"
+  },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "[markdown]": {
@@ -8,7 +11,6 @@
     "source.fixAll.eslint": true,
     "source.fixAll.stylelint": true
   },
-  "eslint.validate": ["html", "javascriptreact", "typescriptreact"],
   "css.validate": false,
   "scss.validate": false
 }

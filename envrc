@@ -1,0 +1,7 @@
+export MYSQL_DATABASE=webapp
+export MYSQL_PORT=3306
+export MYSQL_HOST=localhost
+export MYSQL_USER=webapp
+export MYSQL_PASSWORD=password
+export MYSQL_READONLY_USER=webapp_ro
+export MYSQL_READONLY_PASSWORD=password

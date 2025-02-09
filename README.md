@@ -20,7 +20,8 @@
 
 # 環境構築
 
-mise という tool を利用しています
+## ツールのインストール
+mise を利用しています
 
 ```
 $ brew install mise
@@ -36,4 +37,20 @@ $ mise use pnpm@[mise.toml pnpm version]
 
 $ mise install go@[mise.toml go verion]
 $ mise use go@[mise.toml go verion]
+```
+
+環境変数の追加で .envrc を設定するために
+```
+direnv allow .
+```
+
+pnpm の install
+```
+$ pnpm install
+```
+
+## コンテナの起動
+mysql などコンテナを設定
+```
+docker compose up --build
 ```
