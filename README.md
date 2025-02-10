@@ -59,3 +59,17 @@ mysql などコンテナを設定
 ```
 docker compose up --build
 ```
+
+# 開発ツール
+
+## migrate
+```
+# migrate up
+$ make migrate.up
+
+# migrate down
+$ make migrate.down
+
+# migrate new (migrate file の生成)
+$ make migrate.new name=[table名]
+```
