@@ -1,4 +1,4 @@
-.PHONY: migrate.up migrate.down migrate.new openapi.build wire.build lint
+.PHONY: migrate.up migrate.down migrate.new ormgen openapi.build wire.build lint
 
 BIN_DIR := $(shell pwd)/tools
 
@@ -18,6 +18,10 @@ migrate.down:
 migrate.new:
 	@echo "Create New Migration File (name: $(name))"
 	$(sql-migrate) new -config=./app/migrations/config.yml -env=common $(name)
+
+ormgen:
+	@echo "Generate ORM"
+	go run ./cmd/gormgen/main.go
 
 openapi.build:
 	@echo "Building OpenAPI from TypeSpec"
