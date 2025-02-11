@@ -11,5 +11,5 @@ using TypeSpec.Http;
 
 @route("api/public/signup")
 interface SignUp {
-    create(request: SignUpRequest): void;
+    create(@body req: SignUpRequest): void;
 }

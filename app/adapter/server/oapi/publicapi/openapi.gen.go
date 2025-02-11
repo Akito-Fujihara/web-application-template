@@ -27,13 +27,8 @@ type SignUpRequest struct {
 	Username string `json:"username"`
 }
 
-// SignUpCreateJSONBody defines parameters for SignUpCreate.
-type SignUpCreateJSONBody struct {
-	Request SignUpRequest `json:"request"`
-}
-
 // SignUpCreateJSONRequestBody defines body for SignUpCreate for application/json ContentType.
-type SignUpCreateJSONRequestBody SignUpCreateJSONBody
+type SignUpCreateJSONRequestBody = SignUpRequest
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -337,12 +332,12 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/2yRv47UQAzGX8UylNFmBVTpgOq6E38qRDGbeDc+JeM52wNanfLuaCZZBbitZmT7sz//",
-	"/IK9zEkiRTfsXtD6keZQv1/5Er+nL/ScybwEkkoidaaapjnwVD5+TYQdmivHCy4NpmD2W3S4m8xGGsNM",
-	"d5JLg0rPmZUG7H7slc0266/OP5ubWE5P1DsuRc3xLLUv+1Ryj/k0cQ8fHx+wwV+kxhKxw+PheDgWL5Io",
-	"hsTY4fsaKgN8rNu1IXGbqr41vsScKgFZSRQOwVniw4DdBuqzUvBiVldin2S4ltpeolOsspDSxH0Vtk9W",
-	"vNyAv8arO/e3Smfs8E27n6rd7tT+e6T/Ed6a3Me1V7pmqgFLEm018O74oTwDWa+cfEX3bSQlYIMosC0G",
-	"LmAUBziLgo9ssE1t4JQdfCQYKQykBnO4wokgG53zdIDiYlmWPwEAAP//qGkdpoMCAAA=",
+	"H4sIAAAAAAAC/2xRPW/dMAz8KwTb0Xg22k7e2k7Zgn5MRQfZpp8Z2KJCUi0eAv/3QrKDNEAmETwdebx7",
+	"wlG2JJGiG/ZPaONCW6jld77Gn+kbPWYyL42kkkidqcK0BV5L4bdE2KO5crzi3mAKZn9FpzfBbKQxbPQG",
+	"uDeo9JhZacL+18vP5tz13+TfzTNZhgcaHffC5jhLncu+Fuw+DyuP8Pn+Dhv8Q2osEXvsLt2lK1okUQyJ",
+	"scePtVUW+FKva0PiNlV+a3yNOVUH5HCi+BCcJd5N2J9GfVUKXsTq4dgXmW7l7yjRKVZaSGnlsRLbByta",
+	"ng0v1XulGXt8174k0p5xtK+z2F9b5ZqpNixJtCOdD92n8kxko3Ly4/AfCykBG0SBUxa4gFGcYBYFX9jg",
+	"lN/AkB18IVgoTKQGW7jBQJCN5rxeoKjY9/1fAAAA//9REHaJQQIAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

@@ -12,7 +12,7 @@ import type {
   SWRMutationConfiguration
 } from 'swr/mutation'
 import type {
-  SignUpCreateBody
+  SignUpRequest
 } from '../models'
 import { publicInstance } from '../publicInstance';
 import type { ErrorType } from '../publicInstance';
@@ -22,12 +22,12 @@ import type { ErrorType } from '../publicInstance';
   type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 export const signUpCreate = (
-    signUpCreateBody: SignUpCreateBody,
+    signUpRequest: SignUpRequest,
  options?: SecondParameter<typeof publicInstance>) => {
     return publicInstance<void>(
     {url: `/api/public/signup`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: signUpCreateBody
+      data: signUpRequest
     },
     options);
   }
@@ -35,7 +35,7 @@ export const signUpCreate = (
 
 
 export const getSignUpCreateMutationFetcher = ( options?: SecondParameter<typeof publicInstance>) => {
-  return (_: Key, { arg }: { arg: SignUpCreateBody }): Promise<void> => {
+  return (_: Key, { arg }: { arg: SignUpRequest }): Promise<void> => {
     return signUpCreate(arg, options);
   }
 }
@@ -45,7 +45,7 @@ export type SignUpCreateMutationResult = NonNullable<Awaited<ReturnType<typeof s
 export type SignUpCreateMutationError = ErrorType<unknown>
 
 export const useSignUpCreate = <TError = ErrorType<unknown>>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof signUpCreate>>, TError, Key, SignUpCreateBody, Awaited<ReturnType<typeof signUpCreate>>> & { swrKey?: string }, request?: SecondParameter<typeof publicInstance>}
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof signUpCreate>>, TError, Key, SignUpRequest, Awaited<ReturnType<typeof signUpCreate>>> & { swrKey?: string }, request?: SecondParameter<typeof publicInstance>}
 ) => {
 
   const {swr: swrOptions, request: requestOptions} = options ?? {}

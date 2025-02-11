@@ -4,14 +4,14 @@
  * Private API
  * OpenAPI spec version: 0.0.0
  */
-import type { CreateTodoCreateBody } from '../models'
+import type { CreateTodoRequest } from '../models'
 import { privateInstance } from '../privateInstance'
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1]
 
 export const getPrivateAPI = () => {
   const createTodoCreate = (
-    createTodoCreateBody: CreateTodoCreateBody,
+    createTodoRequest: CreateTodoRequest,
     options?: SecondParameter<typeof privateInstance>,
   ) => {
     return privateInstance<void>(
@@ -19,7 +19,7 @@ export const getPrivateAPI = () => {
         url: `/api/private/todo`,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        data: createTodoCreateBody,
+        data: createTodoRequest,
       },
       options,
     )

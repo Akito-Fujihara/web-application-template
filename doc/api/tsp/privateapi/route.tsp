@@ -12,5 +12,5 @@ using TypeSpec.Http;
 
 @route("api/private/todo")
 interface CreateTodo {
-    create(request: CreateTodoRequest): void;
+    create(@body red: CreateTodoRequest): void;
 }

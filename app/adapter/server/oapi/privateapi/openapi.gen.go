@@ -26,13 +26,8 @@ type CreateTodoRequest struct {
 	Title       string `json:"title"`
 }
 
-// CreateTodoCreateJSONBody defines parameters for CreateTodoCreate.
-type CreateTodoCreateJSONBody struct {
-	Request CreateTodoRequest `json:"request"`
-}
-
 // CreateTodoCreateJSONRequestBody defines body for CreateTodoCreate for application/json ContentType.
-type CreateTodoCreateJSONRequestBody CreateTodoCreateJSONBody
+type CreateTodoCreateJSONRequestBody = CreateTodoRequest
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -336,12 +331,12 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/2xRwU7DMAz9FctwrNYKOPUGnHab0G6IQ9a4NNMWZ7E7aZr67yhJpwHbzXXfe3l+74wd",
-	"7wN78irYnlG6gfYmj++RjNKaLX/QYSTRtAyRA0V1lCGWpIsuqGOfPvUUCFsUjc5/41ShOt3RnT9ThZEO",
-	"o4tksf2cYdUfua/qQuLNljrFKbGc7znrFWFcRXc0SvC6WmKFR4qSrWCzaBZNcsCBvAkOW3zOqwqD0SGb",
-	"r01wdSgCtbLNwoHLnelKk4wsLba/oigTFv8k+sb2lPAdeyWfqSaEnesyud5KSabEehtgvCb7GKnHFh/q",
-	"ayH13EZ9W8X/CC9C92O7IjWOlBcS2Esx8dS83JSJ64EigRPwDPNxoAxC3kLPEXRwAvOrFWxGBR0IBjKW",
-	"osDenGBDMAr1424BycU0TT8BAAD//4N8iQVtAgAA",
+	"H4sIAAAAAAAC/2yRsW7zMAyEX4Xg/49GbLSdvLWdsgVFtqKDYtG1gkRURDpAEOjdC0ku2iDdKIp3OH68",
+	"4sDHwJ68CvZXlGGioynlaySjtGXLb3SaSTQ3Q+RAUR2VEUsyRBfUsc9PvQTCHkWj85+YGlSnB/rjJzUY",
+	"6TS7SBb792WsubH7aL5FvNvToJiyyvmRi181xk10Z6MEz5s1NnimKCUKdqtu1eUEHMib4LDHx9JqMBid",
+	"SvjWBNeGatAq22IcuO6ZtzQ5yNpi/wtFrbDmJ9EXtpc8P7BX8kVqQji4oYjbvVQyFWuu/kcascd/7Q/3",
+	"doHe3hNPt6g0zlQaEthLvcFD93R3CtxOFAmcgGdYooEyCHkLI0fQyQksKzSwmxV0IpjIWIoCR3OBHcEs",
+	"NM6HFeQUKaWvAAAA//9QjkveKwIAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
