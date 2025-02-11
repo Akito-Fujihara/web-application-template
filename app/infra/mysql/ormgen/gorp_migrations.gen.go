@@ -16,14 +16,14 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql/schema"
+	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql/dbschema"
 )
 
 func newGorpMigration(db *gorm.DB, opts ...gen.DOOption) gorpMigration {
 	_gorpMigration := gorpMigration{}
 
 	_gorpMigration.gorpMigrationDo.UseDB(db, opts...)
-	_gorpMigration.gorpMigrationDo.UseModel(&schema.GorpMigration{})
+	_gorpMigration.gorpMigrationDo.UseModel(&dbschema.GorpMigration{})
 
 	tableName := _gorpMigration.gorpMigrationDo.TableName()
 	_gorpMigration.ALL = field.NewAsterisk(tableName)
@@ -196,57 +196,57 @@ func (g gorpMigrationDo) Unscoped() *gorpMigrationDo {
 	return g.withDO(g.DO.Unscoped())
 }
 
-func (g gorpMigrationDo) Create(values ...*schema.GorpMigration) error {
+func (g gorpMigrationDo) Create(values ...*dbschema.GorpMigration) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return g.DO.Create(values)
 }
 
-func (g gorpMigrationDo) CreateInBatches(values []*schema.GorpMigration, batchSize int) error {
+func (g gorpMigrationDo) CreateInBatches(values []*dbschema.GorpMigration, batchSize int) error {
 	return g.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (g gorpMigrationDo) Save(values ...*schema.GorpMigration) error {
+func (g gorpMigrationDo) Save(values ...*dbschema.GorpMigration) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return g.DO.Save(values)
 }
 
-func (g gorpMigrationDo) First() (*schema.GorpMigration, error) {
+func (g gorpMigrationDo) First() (*dbschema.GorpMigration, error) {
 	if result, err := g.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.GorpMigration), nil
+		return result.(*dbschema.GorpMigration), nil
 	}
 }
 
-func (g gorpMigrationDo) Take() (*schema.GorpMigration, error) {
+func (g gorpMigrationDo) Take() (*dbschema.GorpMigration, error) {
 	if result, err := g.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.GorpMigration), nil
+		return result.(*dbschema.GorpMigration), nil
 	}
 }
 
-func (g gorpMigrationDo) Last() (*schema.GorpMigration, error) {
+func (g gorpMigrationDo) Last() (*dbschema.GorpMigration, error) {
 	if result, err := g.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.GorpMigration), nil
+		return result.(*dbschema.GorpMigration), nil
 	}
 }
 
-func (g gorpMigrationDo) Find() ([]*schema.GorpMigration, error) {
+func (g gorpMigrationDo) Find() ([]*dbschema.GorpMigration, error) {
 	result, err := g.DO.Find()
-	return result.([]*schema.GorpMigration), err
+	return result.([]*dbschema.GorpMigration), err
 }
 
-func (g gorpMigrationDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*schema.GorpMigration, err error) {
-	buf := make([]*schema.GorpMigration, 0, batchSize)
+func (g gorpMigrationDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*dbschema.GorpMigration, err error) {
+	buf := make([]*dbschema.GorpMigration, 0, batchSize)
 	err = g.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -254,7 +254,7 @@ func (g gorpMigrationDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch in
 	return results, err
 }
 
-func (g gorpMigrationDo) FindInBatches(result *[]*schema.GorpMigration, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (g gorpMigrationDo) FindInBatches(result *[]*dbschema.GorpMigration, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return g.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -280,23 +280,23 @@ func (g gorpMigrationDo) Preload(fields ...field.RelationField) *gorpMigrationDo
 	return &g
 }
 
-func (g gorpMigrationDo) FirstOrInit() (*schema.GorpMigration, error) {
+func (g gorpMigrationDo) FirstOrInit() (*dbschema.GorpMigration, error) {
 	if result, err := g.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.GorpMigration), nil
+		return result.(*dbschema.GorpMigration), nil
 	}
 }
 
-func (g gorpMigrationDo) FirstOrCreate() (*schema.GorpMigration, error) {
+func (g gorpMigrationDo) FirstOrCreate() (*dbschema.GorpMigration, error) {
 	if result, err := g.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.GorpMigration), nil
+		return result.(*dbschema.GorpMigration), nil
 	}
 }
 
-func (g gorpMigrationDo) FindByPage(offset int, limit int) (result []*schema.GorpMigration, count int64, err error) {
+func (g gorpMigrationDo) FindByPage(offset int, limit int) (result []*dbschema.GorpMigration, count int64, err error) {
 	result, err = g.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -325,7 +325,7 @@ func (g gorpMigrationDo) Scan(result interface{}) (err error) {
 	return g.DO.Scan(result)
 }
 
-func (g gorpMigrationDo) Delete(models ...*schema.GorpMigration) (result gen.ResultInfo, err error) {
+func (g gorpMigrationDo) Delete(models ...*dbschema.GorpMigration) (result gen.ResultInfo, err error) {
 	return g.DO.Delete(models)
 }
 

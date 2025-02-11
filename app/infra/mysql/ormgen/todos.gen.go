@@ -16,14 +16,14 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql/schema"
+	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql/dbschema"
 )
 
 func newTodo(db *gorm.DB, opts ...gen.DOOption) todo {
 	_todo := todo{}
 
 	_todo.todoDo.UseDB(db, opts...)
-	_todo.todoDo.UseModel(&schema.Todo{})
+	_todo.todoDo.UseModel(&dbschema.Todo{})
 
 	tableName := _todo.todoDo.TableName()
 	_todo.ALL = field.NewAsterisk(tableName)
@@ -212,57 +212,57 @@ func (t todoDo) Unscoped() *todoDo {
 	return t.withDO(t.DO.Unscoped())
 }
 
-func (t todoDo) Create(values ...*schema.Todo) error {
+func (t todoDo) Create(values ...*dbschema.Todo) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return t.DO.Create(values)
 }
 
-func (t todoDo) CreateInBatches(values []*schema.Todo, batchSize int) error {
+func (t todoDo) CreateInBatches(values []*dbschema.Todo, batchSize int) error {
 	return t.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (t todoDo) Save(values ...*schema.Todo) error {
+func (t todoDo) Save(values ...*dbschema.Todo) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return t.DO.Save(values)
 }
 
-func (t todoDo) First() (*schema.Todo, error) {
+func (t todoDo) First() (*dbschema.Todo, error) {
 	if result, err := t.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.Todo), nil
+		return result.(*dbschema.Todo), nil
 	}
 }
 
-func (t todoDo) Take() (*schema.Todo, error) {
+func (t todoDo) Take() (*dbschema.Todo, error) {
 	if result, err := t.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.Todo), nil
+		return result.(*dbschema.Todo), nil
 	}
 }
 
-func (t todoDo) Last() (*schema.Todo, error) {
+func (t todoDo) Last() (*dbschema.Todo, error) {
 	if result, err := t.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.Todo), nil
+		return result.(*dbschema.Todo), nil
 	}
 }
 
-func (t todoDo) Find() ([]*schema.Todo, error) {
+func (t todoDo) Find() ([]*dbschema.Todo, error) {
 	result, err := t.DO.Find()
-	return result.([]*schema.Todo), err
+	return result.([]*dbschema.Todo), err
 }
 
-func (t todoDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*schema.Todo, err error) {
-	buf := make([]*schema.Todo, 0, batchSize)
+func (t todoDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*dbschema.Todo, err error) {
+	buf := make([]*dbschema.Todo, 0, batchSize)
 	err = t.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -270,7 +270,7 @@ func (t todoDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error)
 	return results, err
 }
 
-func (t todoDo) FindInBatches(result *[]*schema.Todo, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (t todoDo) FindInBatches(result *[]*dbschema.Todo, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return t.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -296,23 +296,23 @@ func (t todoDo) Preload(fields ...field.RelationField) *todoDo {
 	return &t
 }
 
-func (t todoDo) FirstOrInit() (*schema.Todo, error) {
+func (t todoDo) FirstOrInit() (*dbschema.Todo, error) {
 	if result, err := t.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.Todo), nil
+		return result.(*dbschema.Todo), nil
 	}
 }
 
-func (t todoDo) FirstOrCreate() (*schema.Todo, error) {
+func (t todoDo) FirstOrCreate() (*dbschema.Todo, error) {
 	if result, err := t.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*schema.Todo), nil
+		return result.(*dbschema.Todo), nil
 	}
 }
 
-func (t todoDo) FindByPage(offset int, limit int) (result []*schema.Todo, count int64, err error) {
+func (t todoDo) FindByPage(offset int, limit int) (result []*dbschema.Todo, count int64, err error) {
 	result, err = t.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -341,7 +341,7 @@ func (t todoDo) Scan(result interface{}) (err error) {
 	return t.DO.Scan(result)
 }
 
-func (t todoDo) Delete(models ...*schema.Todo) (result gen.ResultInfo, err error) {
+func (t todoDo) Delete(models ...*dbschema.Todo) (result gen.ResultInfo, err error) {
 	return t.DO.Delete(models)
 }
 

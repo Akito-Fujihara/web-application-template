@@ -19,7 +19,7 @@ func main() {
 
 	g := gen.NewGenerator(gen.Config{
 		OutPath: "app/infra/mysql/ormgen",
-		ModelPkgPath: "app/infra/mysql/schema",
+		ModelPkgPath: "app/infra/mysql/dbschema",
 		
 		FieldNullable: 	 true,
 		FieldCoverable:  true, // ここは要検討
