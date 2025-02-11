@@ -4,7 +4,7 @@ info:
   version: 0.0.0
 tags: []
 paths:
-  /api/public/signup:
+  /api/public/account/signup:
     post:
       operationId: SignUp_create
       parameters: []

@@ -153,7 +153,7 @@ func NewSignUpCreateRequestWithBody(server string, contentType string, body io.R
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/public/signup")
+	operationPath := fmt.Sprintf("/api/public/account/signup")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -279,7 +279,7 @@ func ParseSignUpCreateResponse(rsp *http.Response) (*SignUpCreateResponse, error
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
-	// (POST /api/public/signup)
+	// (POST /api/public/account/signup)
 	SignUpCreate(ctx echo.Context) error
 }
 
@@ -325,19 +325,19 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
-	router.POST(baseURL+"/api/public/signup", wrapper.SignUpCreate)
+	router.POST(baseURL+"/api/public/account/signup", wrapper.SignUpCreate)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/2xRPW/dMAz8KwTb0Xg22k7e2k7Zgn5MRQfZpp8Z2KJCUi0eAv/3QrKDNEAmETwdebx7",
-	"wlG2JJGiG/ZPaONCW6jld77Gn+kbPWYyL42kkkidqcK0BV5L4bdE2KO5crzi3mAKZn9FpzfBbKQxbPQG",
-	"uDeo9JhZacL+18vP5tz13+TfzTNZhgcaHffC5jhLncu+Fuw+DyuP8Pn+Dhv8Q2osEXvsLt2lK1okUQyJ",
-	"scePtVUW+FKva0PiNlV+a3yNOVUH5HCi+BCcJd5N2J9GfVUKXsTq4dgXmW7l7yjRKVZaSGnlsRLbByta",
-	"ng0v1XulGXt8174k0p5xtK+z2F9b5ZqpNixJtCOdD92n8kxko3Ly4/AfCykBG0SBUxa4gFGcYBYFX9jg",
-	"lN/AkB18IVgoTKQGW7jBQJCN5rxeoKjY9/1fAAAA//9REHaJQQIAAA==",
+	"H4sIAAAAAAAC/2yRP2/cMAzFv4rAdjROh7aTt7ZTtqB/pqKDTuadGdikQlItDoG/eyGdgzRAJhN8etLz",
+	"7z1BlrUII7vB+ASWZ1xTH7/ThX+Wb/hY0bwtikpBdcIu45poaYNfC8II5kp8gW2Aksz+ik5vitVQOa34",
+	"hrgNoPhYSXGC8dfLyWF/67+bfw/PZjk9YHbYmpv4LP1e8qVp9/W0UA6f7+9ggD+oRsIwwvFwPBxbFinI",
+	"qRCM8LGv2gM+97+LqVAs3R9TzlLZo9GFa+kk5Eak8UhOwncTjDuwr4rJW2i9kfsi07WdzcKO3G2plIVy",
+	"N8YHa5mewbfpveIZRngXX5qJey3xdSfba2SuFfvCirDdWvpw/NQ+E1pWKn4D8GNGxUAWWMIeK7gEQ57C",
+	"WTT4TBb2+EM4VQ8+Y5gxTagW1nQNJwzV8FyXQ2gptm37FwAA///0+VRySQIAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

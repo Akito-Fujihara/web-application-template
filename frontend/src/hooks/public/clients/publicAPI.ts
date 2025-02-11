@@ -25,7 +25,7 @@ export const signUpCreate = (
     signUpRequest: SignUpRequest,
  options?: SecondParameter<typeof publicInstance>) => {
     return publicInstance<void>(
-    {url: `/api/public/signup`, method: 'POST',
+    {url: `/api/public/account/signup`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: signUpRequest
     },
@@ -39,7 +39,7 @@ export const getSignUpCreateMutationFetcher = ( options?: SecondParameter<typeof
     return signUpCreate(arg, options);
   }
 }
-export const getSignUpCreateMutationKey = () => [`/api/public/signup`] as const;
+export const getSignUpCreateMutationKey = () => [`/api/public/account/signup`] as const;
 
 export type SignUpCreateMutationResult = NonNullable<Awaited<ReturnType<typeof signUpCreate>>>
 export type SignUpCreateMutationError = ErrorType<unknown>

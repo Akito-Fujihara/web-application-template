@@ -9,7 +9,7 @@ namespace publicapi;
 
 using TypeSpec.Http;
 
-@route("api/public/signup")
+@route("api/public/account/signup")
 interface SignUp {
     create(@body req: SignUpRequest): void;
 }
