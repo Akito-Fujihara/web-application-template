@@ -1,7 +1,7 @@
 {
   "editor.tabSize": 2,
   "files.associations": {
-    ".envrc": "shellscript"
+    "*envrc": "shellscript"
   },
   "go.lintTool": "golangci-lint",
   "go.lintFlags": ["--config=${workspaceFolder}/.golangci.yaml", "--fast"],
