@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	app, err := di.InitializeServer()
+	app, cleanup, err := di.InitializeServer()
+	defer cleanup()
 	if err != nil {
 		errmsg := errors.New("failed to initialize server")
 		panic(errors.Join(err, errmsg))

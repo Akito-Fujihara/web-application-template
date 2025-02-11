@@ -8,13 +8,33 @@ package di
 
 import (
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server"
+	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/private"
+	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/public"
+	"github.com/Akito-Fujihara/web-application-template/app/config/env"
+	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql"
+	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql/repository"
+	"github.com/Akito-Fujihara/web-application-template/app/usecase"
 )
 
 // Injectors from wire.go:
 
-func InitializeServer() (*server.Application, error) {
-	privateServer := server.NewPrivateServer()
-	publicServer := server.NewPublicAServer()
-	application := server.NewApplication(privateServer, publicServer)
-	return application, nil
+func InitializeServer() (*server.Application, func(), error) {
+	iTodoRepository := repository.NewTodoRepository()
+	iTodoUsecase := usecase.NewTodoUsecase(iTodoRepository)
+	serverInterface := private.NewPrivateServer(iTodoUsecase)
+	iUserRepository := repository.NewUserRepository()
+	iAccountUsecase := usecase.NewAccountUsecase(iUserRepository)
+	publicapiServerInterface := public.NewPublicServer(iAccountUsecase)
+	config, err := env.MysqlConfig()
+	if err != nil {
+		return nil, nil, err
+	}
+	db, cleanup, err := mysql.NewMysqlConn(config)
+	if err != nil {
+		return nil, nil, err
+	}
+	application := server.NewApplication(serverInterface, publicapiServerInterface, db)
+	return application, func() {
+		cleanup()
+	}, nil
 }

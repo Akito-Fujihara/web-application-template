@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/Akito-Fujihara/web-application-template/app/config/env"
-	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql/db"
+	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql"
 	"gorm.io/gen"
 )
 
@@ -11,7 +11,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	DB, cleanup, err := db.NewMysqlConn(mysqlConfig)
+	DB, cleanup, err := mysql.NewMysqlConn(mysqlConfig)
 	if err != nil {
 		panic(err)
 	}

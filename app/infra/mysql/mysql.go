@@ -1,15 +1,20 @@
-package db
+package mysql
 
 import (
 	"fmt"
 	"log/slog"
 
+	"github.com/google/wire"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/plugin/dbresolver"
 )
 
-type MysqlConfig struct {
+var Set = wire.NewSet(
+	NewMysqlConn,
+)
+
+type Config struct {
 	Database	 string
 	Host		 string
 	ReadonlyHost string
@@ -20,7 +25,7 @@ type MysqlConfig struct {
 	ReadonlyPassword string
 }
 
-func NewMysqlConn(config *MysqlConfig) (*gorm.DB, func(), error) {
+func NewMysqlConn(config *Config) (*gorm.DB, func(), error) {
 	dns := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True",
 		config.Username,
 		config.Password,

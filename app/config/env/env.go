@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql/db"
+	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql"
 	"github.com/google/wire"
 )
 
@@ -12,7 +12,7 @@ var Set = wire.NewSet(
 	MysqlConfig,
 )
 
-func MysqlConfig() (*db.MysqlConfig, error) {
+func MysqlConfig() (*mysql.Config, error) {
 	username := os.Getenv("MYSQL_USER")
 	if username == "" {
 		return nil, fmt.Errorf("MYSQL_USER is not set")
@@ -45,7 +45,7 @@ func MysqlConfig() (*db.MysqlConfig, error) {
 	if database == "" {
 		return nil, fmt.Errorf("MYSQL_DATABASE is not set")
 	}
-	return &db.MysqlConfig{
+	return &mysql.Config{
 		Database:          database,
 		Host:              host,
 		ReadonlyHost:      readonlyHost,
