@@ -27,8 +27,8 @@ func newTodo(db *gorm.DB, opts ...gen.DOOption) todo {
 
 	tableName := _todo.todoDo.TableName()
 	_todo.ALL = field.NewAsterisk(tableName)
-	_todo.ID = field.NewInt32(tableName, "id")
-	_todo.UserID = field.NewInt32(tableName, "user_id")
+	_todo.ID = field.NewInt64(tableName, "id")
+	_todo.UserID = field.NewInt64(tableName, "user_id")
 	_todo.Title = field.NewString(tableName, "title")
 	_todo.Description = field.NewString(tableName, "description")
 	_todo.IsCompleted = field.NewBool(tableName, "is_completed")
@@ -44,8 +44,8 @@ type todo struct {
 	todoDo todoDo
 
 	ALL         field.Asterisk
-	ID          field.Int32
-	UserID      field.Int32
+	ID          field.Int64
+	UserID      field.Int64
 	Title       field.String
 	Description field.String
 	IsCompleted field.Bool
@@ -67,8 +67,8 @@ func (t todo) As(alias string) *todo {
 
 func (t *todo) updateTableName(table string) *todo {
 	t.ALL = field.NewAsterisk(table)
-	t.ID = field.NewInt32(table, "id")
-	t.UserID = field.NewInt32(table, "user_id")
+	t.ID = field.NewInt64(table, "id")
+	t.UserID = field.NewInt64(table, "user_id")
 	t.Title = field.NewString(table, "title")
 	t.Description = field.NewString(table, "description")
 	t.IsCompleted = field.NewBool(table, "is_completed")

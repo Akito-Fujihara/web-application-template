@@ -1,8 +1,8 @@
 
 -- +migrate Up
 CREATE TABLE todos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     is_completed BOOLEAN DEFAULT FALSE,

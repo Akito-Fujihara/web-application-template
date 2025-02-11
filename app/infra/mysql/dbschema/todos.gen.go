@@ -12,8 +12,8 @@ const TableNameTodo = "todos"
 
 // Todo mapped from table <todos>
 type Todo struct {
-	ID          int32      `gorm:"column:id;type:int;primaryKey;autoIncrement:true" json:"id"`
-	UserID      int32      `gorm:"column:user_id;type:int;not null;index:user_id,priority:1" json:"user_id"`
+	ID          int64      `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true" json:"id"`
+	UserID      int64      `gorm:"column:user_id;type:bigint;not null;index:user_id,priority:1" json:"user_id"`
 	Title       string     `gorm:"column:title;type:varchar(255);not null" json:"title"`
 	Description *string    `gorm:"column:description;type:text" json:"description"`
 	IsCompleted *bool      `gorm:"column:is_completed;type:tinyint(1)" json:"is_completed"`
