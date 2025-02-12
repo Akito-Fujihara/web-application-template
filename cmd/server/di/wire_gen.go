@@ -11,6 +11,8 @@ import (
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/private"
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/public"
 	"github.com/Akito-Fujihara/web-application-template/app/config/env"
+	"github.com/Akito-Fujihara/web-application-template/app/infra/cache"
+	"github.com/Akito-Fujihara/web-application-template/app/infra/cache/cacheclient"
 	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql"
 	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql/repository"
 	"github.com/Akito-Fujihara/web-application-template/app/usecase"
@@ -22,14 +24,23 @@ func InitializeServer() (*server.Application, func(), error) {
 	iTodoRepository := repository.NewTodoRepository()
 	iTodoUsecase := usecase.NewTodoUsecase(iTodoRepository)
 	serverInterface := private.NewPrivateServer(iTodoUsecase)
-	iUserRepository := repository.NewUserRepository()
-	iAccountUsecase := usecase.NewAccountUsecase(iUserRepository)
-	publicapiServerInterface := public.NewPublicServer(iAccountUsecase)
-	config, err := env.MysqlConfig()
+	config, err := env.CacheConfig()
 	if err != nil {
 		return nil, nil, err
 	}
-	db, cleanup, err := mysql.NewMysqlConn(config)
+	client, err := cache.NewCacheConn(config)
+	if err != nil {
+		return nil, nil, err
+	}
+	iCacheClient := cacheclient.NewCacheClient(client)
+	iUserRepository := repository.NewUserRepository()
+	iAccountUsecase := usecase.NewAccountUsecase(iCacheClient, iUserRepository)
+	publicapiServerInterface := public.NewPublicServer(iAccountUsecase)
+	mysqlConfig, err := env.MysqlConfig()
+	if err != nil {
+		return nil, nil, err
+	}
+	db, cleanup, err := mysql.NewMysqlConn(mysqlConfig)
 	if err != nil {
 		return nil, nil, err
 	}

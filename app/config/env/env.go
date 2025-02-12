@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Akito-Fujihara/web-application-template/app/infra/cache"
 	"github.com/Akito-Fujihara/web-application-template/app/infra/mysql"
 	"github.com/google/wire"
 )
 
 var Set = wire.NewSet(
 	MysqlConfig,
+	CacheConfig,
 )
 
 func MysqlConfig() (*mysql.Config, error) {
@@ -54,5 +56,25 @@ func MysqlConfig() (*mysql.Config, error) {
 		ReadonlyUsername:  readonlyUsername,
 		Password:          password,
 		ReadonlyPassword:  readonlyPassword,
+	}, nil
+}
+
+func CacheConfig() (*cache.Config, error) {
+	host := os.Getenv("REDIS_HOST")
+	if host == "" {
+		return nil, fmt.Errorf("REDIS_HOST is not set")
+	}
+	port := os.Getenv("REDIS_PORT")
+	if port == "" {
+		return nil, fmt.Errorf("REDIS_PORT is not set")
+	}
+	password := os.Getenv("REDIS_PASSWORD")
+	if password == "" {
+		return nil, fmt.Errorf("REDIS_PASSWORD is not set")
+	}
+	return &cache.Config{
+		Host:     host,
+		Port:     6379,
+		Password: password,
 	}, nil
 }

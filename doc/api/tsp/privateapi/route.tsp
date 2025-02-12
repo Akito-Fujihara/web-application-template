@@ -10,7 +10,8 @@ namespace privateapi;
 
 using TypeSpec.Http;
 
+@post
 @route("api/private/todo")
-interface CreateTodo {
-    create(@body red: CreateTodoRequest): void;
-}
+op CreateTodo(
+    @body req: CreateTodoRequest
+): void;

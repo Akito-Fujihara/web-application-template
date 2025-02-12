@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Akito-Fujihara/web-application-template/app/domain/model"
 	domainRepo "github.com/Akito-Fujihara/web-application-template/app/domain/repository"
@@ -25,10 +26,29 @@ func (r *UserRepositoy) CreateUser(ctx context.Context, user *model.User, passwo
 	return nil
 }
 
+func (r *UserRepositoy) ValidateCredentials(ctx context.Context, email string, password string) (*model.User, error) {
+	dto, err := ormgen.User.WithContext(ctx).Where(ormgen.User.Email.Eq(email)).First()
+	if err != nil {
+		return nil, err
+	}
+	if dto.Password != password {
+		return nil, fmt.Errorf("invalid password")
+	}
+	return buildDtoToUser(dto), nil
+}
+
 func buildUserToDto(user *model.User) *dbschema.User {
 	return &dbschema.User{
 		ID:        user.ID,
 		Name: 		user.Name,
 		Email:     user.Email,
+	}
+}
+
+func buildDtoToUser(dto *dbschema.User) *model.User {
+	return &model.User{
+		ID:        dto.ID,
+		Name: 		dto.Name,
+		Email:     dto.Email,
 	}
 }

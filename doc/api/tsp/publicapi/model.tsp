@@ -9,3 +9,8 @@ model SignUpRequest {
     email: string;
     password: string;
 }
+
+model LoginRequest {
+    email: string;
+    password: string;
+}

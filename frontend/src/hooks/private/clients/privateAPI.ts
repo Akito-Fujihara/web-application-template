@@ -10,7 +10,7 @@ import { privateInstance } from '../privateInstance'
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1]
 
 export const getPrivateAPI = () => {
-  const createTodoCreate = (
+  const createTodo = (
     createTodoRequest: CreateTodoRequest,
     options?: SecondParameter<typeof privateInstance>,
   ) => {
@@ -25,8 +25,8 @@ export const getPrivateAPI = () => {
     )
   }
 
-  return { createTodoCreate }
+  return { createTodo }
 }
-export type CreateTodoCreateResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getPrivateAPI>['createTodoCreate']>>
+export type CreateTodoResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getPrivateAPI>['createTodo']>>
 >

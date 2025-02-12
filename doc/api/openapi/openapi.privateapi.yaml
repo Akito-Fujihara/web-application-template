@@ -6,7 +6,7 @@ tags: []
 paths:
   /api/private/todo:
     post:
-      operationId: CreateTodo_create
+      operationId: CreateTodo
       parameters: []
       responses:
         '204':

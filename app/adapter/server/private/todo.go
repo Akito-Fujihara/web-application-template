@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s *PrivateServer) CreateTodoCreate(c echo.Context) error {
+func (s *PrivateServer) CreateTodo(c echo.Context) error {
 	ctx := c.Request().Context()
 	defer c.SetRequest(c.Request().WithContext(ctx))
 

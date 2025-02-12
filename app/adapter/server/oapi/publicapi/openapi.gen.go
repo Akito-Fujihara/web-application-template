@@ -20,6 +20,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// LoginRequest defines model for LoginRequest.
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 // SignUpRequest defines model for SignUpRequest.
 type SignUpRequest struct {
 	Email    string `json:"email"`
@@ -27,8 +33,11 @@ type SignUpRequest struct {
 	Username string `json:"username"`
 }
 
-// SignUpCreateJSONRequestBody defines body for SignUpCreate for application/json ContentType.
-type SignUpCreateJSONRequestBody = SignUpRequest
+// LoginJSONRequestBody defines body for Login for application/json ContentType.
+type LoginJSONRequestBody = LoginRequest
+
+// SignUpJSONRequestBody defines body for SignUp for application/json ContentType.
+type SignUpJSONRequestBody = SignUpRequest
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -103,14 +112,19 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
-	// SignUpCreateWithBody request with any body
-	SignUpCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// LoginWithBody request with any body
+	LoginWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	SignUpCreate(ctx context.Context, body SignUpCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	Login(ctx context.Context, body LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SignUpWithBody request with any body
+	SignUpWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SignUp(ctx context.Context, body SignUpJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-func (c *Client) SignUpCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewSignUpCreateRequestWithBody(c.Server, contentType, body)
+func (c *Client) LoginWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLoginRequestWithBody(c.Server, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -121,8 +135,8 @@ func (c *Client) SignUpCreateWithBody(ctx context.Context, contentType string, b
 	return c.Client.Do(req)
 }
 
-func (c *Client) SignUpCreate(ctx context.Context, body SignUpCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewSignUpCreateRequest(c.Server, body)
+func (c *Client) Login(ctx context.Context, body LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLoginRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -133,19 +147,83 @@ func (c *Client) SignUpCreate(ctx context.Context, body SignUpCreateJSONRequestB
 	return c.Client.Do(req)
 }
 
-// NewSignUpCreateRequest calls the generic SignUpCreate builder with application/json body
-func NewSignUpCreateRequest(server string, body SignUpCreateJSONRequestBody) (*http.Request, error) {
+func (c *Client) SignUpWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSignUpRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SignUp(ctx context.Context, body SignUpJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSignUpRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// NewLoginRequest calls the generic Login builder with application/json body
+func NewLoginRequest(server string, body LoginJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewSignUpCreateRequestWithBody(server, "application/json", bodyReader)
+	return NewLoginRequestWithBody(server, "application/json", bodyReader)
 }
 
-// NewSignUpCreateRequestWithBody generates requests for SignUpCreate with any type of body
-func NewSignUpCreateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewLoginRequestWithBody generates requests for Login with any type of body
+func NewLoginRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/public/account/login")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSignUpRequest calls the generic SignUp builder with application/json body
+func NewSignUpRequest(server string, body SignUpJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSignUpRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSignUpRequestWithBody generates requests for SignUp with any type of body
+func NewSignUpRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -216,19 +294,24 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
-	// SignUpCreateWithBodyWithResponse request with any body
-	SignUpCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SignUpCreateResponse, error)
+	// LoginWithBodyWithResponse request with any body
+	LoginWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LoginResponse, error)
 
-	SignUpCreateWithResponse(ctx context.Context, body SignUpCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*SignUpCreateResponse, error)
+	LoginWithResponse(ctx context.Context, body LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*LoginResponse, error)
+
+	// SignUpWithBodyWithResponse request with any body
+	SignUpWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SignUpResponse, error)
+
+	SignUpWithResponse(ctx context.Context, body SignUpJSONRequestBody, reqEditors ...RequestEditorFn) (*SignUpResponse, error)
 }
 
-type SignUpCreateResponse struct {
+type LoginResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r SignUpCreateResponse) Status() string {
+func (r LoginResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -236,39 +319,93 @@ func (r SignUpCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r SignUpCreateResponse) StatusCode() int {
+func (r LoginResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-// SignUpCreateWithBodyWithResponse request with arbitrary body returning *SignUpCreateResponse
-func (c *ClientWithResponses) SignUpCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SignUpCreateResponse, error) {
-	rsp, err := c.SignUpCreateWithBody(ctx, contentType, body, reqEditors...)
+type SignUpResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r SignUpResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SignUpResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// LoginWithBodyWithResponse request with arbitrary body returning *LoginResponse
+func (c *ClientWithResponses) LoginWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LoginResponse, error) {
+	rsp, err := c.LoginWithBody(ctx, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseSignUpCreateResponse(rsp)
+	return ParseLoginResponse(rsp)
 }
 
-func (c *ClientWithResponses) SignUpCreateWithResponse(ctx context.Context, body SignUpCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*SignUpCreateResponse, error) {
-	rsp, err := c.SignUpCreate(ctx, body, reqEditors...)
+func (c *ClientWithResponses) LoginWithResponse(ctx context.Context, body LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*LoginResponse, error) {
+	rsp, err := c.Login(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseSignUpCreateResponse(rsp)
+	return ParseLoginResponse(rsp)
 }
 
-// ParseSignUpCreateResponse parses an HTTP response from a SignUpCreateWithResponse call
-func ParseSignUpCreateResponse(rsp *http.Response) (*SignUpCreateResponse, error) {
+// SignUpWithBodyWithResponse request with arbitrary body returning *SignUpResponse
+func (c *ClientWithResponses) SignUpWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SignUpResponse, error) {
+	rsp, err := c.SignUpWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSignUpResponse(rsp)
+}
+
+func (c *ClientWithResponses) SignUpWithResponse(ctx context.Context, body SignUpJSONRequestBody, reqEditors ...RequestEditorFn) (*SignUpResponse, error) {
+	rsp, err := c.SignUp(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSignUpResponse(rsp)
+}
+
+// ParseLoginResponse parses an HTTP response from a LoginWithResponse call
+func ParseLoginResponse(rsp *http.Response) (*LoginResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &SignUpCreateResponse{
+	response := &LoginResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseSignUpResponse parses an HTTP response from a SignUpWithResponse call
+func ParseSignUpResponse(rsp *http.Response) (*SignUpResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SignUpResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -279,8 +416,11 @@ func ParseSignUpCreateResponse(rsp *http.Response) (*SignUpCreateResponse, error
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
+	// (POST /api/public/account/login)
+	Login(ctx echo.Context) error
+
 	// (POST /api/public/account/signup)
-	SignUpCreate(ctx echo.Context) error
+	SignUp(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -288,12 +428,21 @@ type ServerInterfaceWrapper struct {
 	Handler ServerInterface
 }
 
-// SignUpCreate converts echo context to params.
-func (w *ServerInterfaceWrapper) SignUpCreate(ctx echo.Context) error {
+// Login converts echo context to params.
+func (w *ServerInterfaceWrapper) Login(ctx echo.Context) error {
 	var err error
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.SignUpCreate(ctx)
+	err = w.Handler.Login(ctx)
+	return err
+}
+
+// SignUp converts echo context to params.
+func (w *ServerInterfaceWrapper) SignUp(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.SignUp(ctx)
 	return err
 }
 
@@ -325,19 +474,21 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
-	router.POST(baseURL+"/api/public/account/signup", wrapper.SignUpCreate)
+	router.POST(baseURL+"/api/public/account/login", wrapper.Login)
+	router.POST(baseURL+"/api/public/account/signup", wrapper.SignUp)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/2yRP2/cMAzFv4rAdjROh7aTt7ZTtqB/pqKDTuadGdikQlItDoG/eyGdgzRAJhN8etLz",
-	"7z1BlrUII7vB+ASWZ1xTH7/ThX+Wb/hY0bwtikpBdcIu45poaYNfC8II5kp8gW2Aksz+ik5vitVQOa34",
-	"hrgNoPhYSXGC8dfLyWF/67+bfw/PZjk9YHbYmpv4LP1e8qVp9/W0UA6f7+9ggD+oRsIwwvFwPBxbFinI",
-	"qRCM8LGv2gM+97+LqVAs3R9TzlLZo9GFa+kk5Eak8UhOwncTjDuwr4rJW2i9kfsi07WdzcKO3G2plIVy",
-	"N8YHa5mewbfpveIZRngXX5qJey3xdSfba2SuFfvCirDdWvpw/NQ+E1pWKn4D8GNGxUAWWMIeK7gEQ57C",
-	"WTT4TBb2+EM4VQ8+Y5gxTagW1nQNJwzV8FyXQ2gptm37FwAA///0+VRySQIAAA==",
+	"H4sIAAAAAAAC/8xSPY/UQAz9K5ahjDYroEoH3UkUJz4qRDE78W58Suy5sQe0OuW/o5ksHCsdggIkqji2",
+	"n+f5+T1g1CWpkLjh8IAWJ1pCC9/qieUd3Rcyr/8pa6LsTK1KS+C5Bn5OhAOaZ5YTrh2mYPZV8/hEce0w",
+	"033hTCMOny4zfkJ87r4j9HBH0eu493ySj+nv8uiwGGUJC/2e5I/O7k/4VjTLUdtc9rnWbsth5givb2+w",
+	"wy+UjVVwwP1uv9tXLppIQmIc8GVL1Qd8atv1IXGfGr4PMWoR7+d6lyaEboJUOYKzys2Iw3Y23HYg8zc6",
+	"nmtTVHGS1h9Smjk2RH9nKo93r9HzTEcc8Fn/aIz+4or+yhLrtVKeC7WEJRXbjvNi/6p+RrKYOfm294eJ",
+	"MgEbiMKFFbiCkYxw1Aw+scGFfQeH4uATwURhpGywhDMcCIrRscw7qCzW7kmdjE9S0q+F2oz1j5S6du3/",
+	"I9W6fgsAAP//iFHHcvIDAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

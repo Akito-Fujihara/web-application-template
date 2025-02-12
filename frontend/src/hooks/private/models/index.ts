@@ -5,5 +5,6 @@
  * OpenAPI spec version: 0.0.0
  */
 
+export * from './createTodoBody'
 export * from './createTodoCreateBody'
 export * from './createTodoRequest'

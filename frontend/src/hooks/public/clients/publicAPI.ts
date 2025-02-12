@@ -12,6 +12,7 @@ import type {
   SWRMutationConfiguration
 } from 'swr/mutation'
 import type {
+  LoginRequest,
   SignUpRequest
 } from '../models'
 import { publicInstance } from '../publicInstance';
@@ -21,7 +22,47 @@ import type { ErrorType } from '../publicInstance';
   
   type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-export const signUpCreate = (
+export const login = (
+    loginRequest: LoginRequest,
+ options?: SecondParameter<typeof publicInstance>) => {
+    return publicInstance<void>(
+    {url: `/api/public/account/login`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: loginRequest
+    },
+    options);
+  }
+
+
+
+export const getLoginMutationFetcher = ( options?: SecondParameter<typeof publicInstance>) => {
+  return (_: Key, { arg }: { arg: LoginRequest }): Promise<void> => {
+    return login(arg, options);
+  }
+}
+export const getLoginMutationKey = () => [`/api/public/account/login`] as const;
+
+export type LoginMutationResult = NonNullable<Awaited<ReturnType<typeof login>>>
+export type LoginMutationError = ErrorType<unknown>
+
+export const useLogin = <TError = ErrorType<unknown>>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof login>>, TError, Key, LoginRequest, Awaited<ReturnType<typeof login>>> & { swrKey?: string }, request?: SecondParameter<typeof publicInstance>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getLoginMutationKey();
+  const swrFn = getLoginMutationFetcher(requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+export const signUp = (
     signUpRequest: SignUpRequest,
  options?: SecondParameter<typeof publicInstance>) => {
     return publicInstance<void>(
@@ -34,24 +75,24 @@ export const signUpCreate = (
 
 
 
-export const getSignUpCreateMutationFetcher = ( options?: SecondParameter<typeof publicInstance>) => {
+export const getSignUpMutationFetcher = ( options?: SecondParameter<typeof publicInstance>) => {
   return (_: Key, { arg }: { arg: SignUpRequest }): Promise<void> => {
-    return signUpCreate(arg, options);
+    return signUp(arg, options);
   }
 }
-export const getSignUpCreateMutationKey = () => [`/api/public/account/signup`] as const;
+export const getSignUpMutationKey = () => [`/api/public/account/signup`] as const;
 
-export type SignUpCreateMutationResult = NonNullable<Awaited<ReturnType<typeof signUpCreate>>>
-export type SignUpCreateMutationError = ErrorType<unknown>
+export type SignUpMutationResult = NonNullable<Awaited<ReturnType<typeof signUp>>>
+export type SignUpMutationError = ErrorType<unknown>
 
-export const useSignUpCreate = <TError = ErrorType<unknown>>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof signUpCreate>>, TError, Key, SignUpRequest, Awaited<ReturnType<typeof signUpCreate>>> & { swrKey?: string }, request?: SecondParameter<typeof publicInstance>}
+export const useSignUp = <TError = ErrorType<unknown>>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof signUp>>, TError, Key, SignUpRequest, Awaited<ReturnType<typeof signUp>>> & { swrKey?: string }, request?: SecondParameter<typeof publicInstance>}
 ) => {
 
   const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const swrKey = swrOptions?.swrKey ?? getSignUpCreateMutationKey();
-  const swrFn = getSignUpCreateMutationFetcher(requestOptions);
+  const swrKey = swrOptions?.swrKey ?? getSignUpMutationKey();
+  const swrFn = getSignUpMutationFetcher(requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions)
 

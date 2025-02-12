@@ -26,8 +26,8 @@ type CreateTodoRequest struct {
 	Title       string `json:"title"`
 }
 
-// CreateTodoCreateJSONRequestBody defines body for CreateTodoCreate for application/json ContentType.
-type CreateTodoCreateJSONRequestBody = CreateTodoRequest
+// CreateTodoJSONRequestBody defines body for CreateTodo for application/json ContentType.
+type CreateTodoJSONRequestBody = CreateTodoRequest
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -102,14 +102,14 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
-	// CreateTodoCreateWithBody request with any body
-	CreateTodoCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// CreateTodoWithBody request with any body
+	CreateTodoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	CreateTodoCreate(ctx context.Context, body CreateTodoCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	CreateTodo(ctx context.Context, body CreateTodoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-func (c *Client) CreateTodoCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateTodoCreateRequestWithBody(c.Server, contentType, body)
+func (c *Client) CreateTodoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateTodoRequestWithBody(c.Server, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -120,8 +120,8 @@ func (c *Client) CreateTodoCreateWithBody(ctx context.Context, contentType strin
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateTodoCreate(ctx context.Context, body CreateTodoCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateTodoCreateRequest(c.Server, body)
+func (c *Client) CreateTodo(ctx context.Context, body CreateTodoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateTodoRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -132,19 +132,19 @@ func (c *Client) CreateTodoCreate(ctx context.Context, body CreateTodoCreateJSON
 	return c.Client.Do(req)
 }
 
-// NewCreateTodoCreateRequest calls the generic CreateTodoCreate builder with application/json body
-func NewCreateTodoCreateRequest(server string, body CreateTodoCreateJSONRequestBody) (*http.Request, error) {
+// NewCreateTodoRequest calls the generic CreateTodo builder with application/json body
+func NewCreateTodoRequest(server string, body CreateTodoJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewCreateTodoCreateRequestWithBody(server, "application/json", bodyReader)
+	return NewCreateTodoRequestWithBody(server, "application/json", bodyReader)
 }
 
-// NewCreateTodoCreateRequestWithBody generates requests for CreateTodoCreate with any type of body
-func NewCreateTodoCreateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewCreateTodoRequestWithBody generates requests for CreateTodo with any type of body
+func NewCreateTodoRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -215,19 +215,19 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
-	// CreateTodoCreateWithBodyWithResponse request with any body
-	CreateTodoCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTodoCreateResponse, error)
+	// CreateTodoWithBodyWithResponse request with any body
+	CreateTodoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTodoResponse, error)
 
-	CreateTodoCreateWithResponse(ctx context.Context, body CreateTodoCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTodoCreateResponse, error)
+	CreateTodoWithResponse(ctx context.Context, body CreateTodoJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTodoResponse, error)
 }
 
-type CreateTodoCreateResponse struct {
+type CreateTodoResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateTodoCreateResponse) Status() string {
+func (r CreateTodoResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -235,39 +235,39 @@ func (r CreateTodoCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateTodoCreateResponse) StatusCode() int {
+func (r CreateTodoResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-// CreateTodoCreateWithBodyWithResponse request with arbitrary body returning *CreateTodoCreateResponse
-func (c *ClientWithResponses) CreateTodoCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTodoCreateResponse, error) {
-	rsp, err := c.CreateTodoCreateWithBody(ctx, contentType, body, reqEditors...)
+// CreateTodoWithBodyWithResponse request with arbitrary body returning *CreateTodoResponse
+func (c *ClientWithResponses) CreateTodoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTodoResponse, error) {
+	rsp, err := c.CreateTodoWithBody(ctx, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateTodoCreateResponse(rsp)
+	return ParseCreateTodoResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateTodoCreateWithResponse(ctx context.Context, body CreateTodoCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTodoCreateResponse, error) {
-	rsp, err := c.CreateTodoCreate(ctx, body, reqEditors...)
+func (c *ClientWithResponses) CreateTodoWithResponse(ctx context.Context, body CreateTodoJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTodoResponse, error) {
+	rsp, err := c.CreateTodo(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateTodoCreateResponse(rsp)
+	return ParseCreateTodoResponse(rsp)
 }
 
-// ParseCreateTodoCreateResponse parses an HTTP response from a CreateTodoCreateWithResponse call
-func ParseCreateTodoCreateResponse(rsp *http.Response) (*CreateTodoCreateResponse, error) {
+// ParseCreateTodoResponse parses an HTTP response from a CreateTodoWithResponse call
+func ParseCreateTodoResponse(rsp *http.Response) (*CreateTodoResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateTodoCreateResponse{
+	response := &CreateTodoResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -279,7 +279,7 @@ func ParseCreateTodoCreateResponse(rsp *http.Response) (*CreateTodoCreateRespons
 type ServerInterface interface {
 
 	// (POST /api/private/todo)
-	CreateTodoCreate(ctx echo.Context) error
+	CreateTodo(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -287,12 +287,12 @@ type ServerInterfaceWrapper struct {
 	Handler ServerInterface
 }
 
-// CreateTodoCreate converts echo context to params.
-func (w *ServerInterfaceWrapper) CreateTodoCreate(ctx echo.Context) error {
+// CreateTodo converts echo context to params.
+func (w *ServerInterfaceWrapper) CreateTodo(ctx echo.Context) error {
 	var err error
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.CreateTodoCreate(ctx)
+	err = w.Handler.CreateTodo(ctx)
 	return err
 }
 
@@ -324,19 +324,19 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
-	router.POST(baseURL+"/api/private/todo", wrapper.CreateTodoCreate)
+	router.POST(baseURL+"/api/private/todo", wrapper.CreateTodo)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/2yRsW7zMAyEX4Xg/49GbLSdvLWdsgVFtqKDYtG1gkRURDpAEOjdC0ku2iDdKIp3OH68",
-	"4sDHwJ68CvZXlGGioynlaySjtGXLb3SaSTQ3Q+RAUR2VEUsyRBfUsc9PvQTCHkWj85+YGlSnB/rjJzUY",
-	"6TS7SBb792WsubH7aL5FvNvToJiyyvmRi181xk10Z6MEz5s1NnimKCUKdqtu1eUEHMib4LDHx9JqMBid",
-	"SvjWBNeGatAq22IcuO6ZtzQ5yNpi/wtFrbDmJ9EXtpc8P7BX8kVqQji4oYjbvVQyFWuu/kcascd/7Q/3",
-	"doHe3hNPt6g0zlQaEthLvcFD93R3CtxOFAmcgGdYooEyCHkLI0fQyQksKzSwmxV0IpjIWIoCR3OBHcEs",
-	"NM6HFeQUKaWvAAAA//9QjkveKwIAAA==",
+	"H4sIAAAAAAAC/2yRsW7rMAxFf4Xge6MRG20nb22nbEGRreigWNe1gkRUJDpAEPjfC8ku2iDdaJq8ODy6",
+	"cifHIB5eE7dXTt2Aoynla4RRbMXKG04jkuZmiBIQ1aGMWKQuuqBOfP7USwC3nDQ6/8lTxer0gD/+TBVH",
+	"nEYXYbl9X8aqm7iP6ntJdnt0ylPecr6XkjcH8ya6s1HQ82bNFZ8RU0HhZtWsmkwgAd4Exy0/llbFwehQ",
+	"4GsTXB3mgFrFluAg8535SpNB1pbbXyp4JkfSF7GXPNmJV/iyZEI4uK6s1fs0O5mF5up/RM8t/6t/jNeL",
+	"7vre9XQrSeOI0khBfJrtPzRPd4/A2wER5BJ5oQWNVCjBW+olkg4u0XJCRbtRSQfQAGMREx3NhXagMaEf",
+	"DyvKFNM0fQUAAP//ZaDOjCUCAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

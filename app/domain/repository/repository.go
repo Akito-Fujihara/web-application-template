@@ -7,6 +7,7 @@ import (
 )
 type IUserRepository interface {
 	CreateUser(ctx context.Context, user *model.User, password string) error
+	ValidateCredentials(ctx context.Context, email string, password string) (*model.User, error)
 }
 
 type ITodoRepository interface {
