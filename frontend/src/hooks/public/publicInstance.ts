@@ -1,6 +1,7 @@
 import Axios, { AxiosError,AxiosRequestConfig } from 'axios';
- 
-export const AXIOS_INSTANCE = Axios.create({ baseURL: '<BACKEND URL>' }); // use your own URL here or environment variable
+
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
+export const AXIOS_INSTANCE = Axios.create({ baseURL: baseURL }); // use your own URL here or environment variable
 
 // add a second `options` argument here if you want to pass extra options to each generated query
 export const publicInstance = <T>(

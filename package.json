@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack frontend",
+    "dev": "next dev --turbo frontend",
     "build": "next build frontend",
     "start": "next start frontend",
     "lint": "next lint --fix frontend",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@mantine/core": "^7.16.2",
+    "@mantine/form": "^7.16.3",
     "@mantine/hooks": "^7.16.2",
     "@tailwindcss/postcss": "^4.0.3",
     "@typespec/http": "^0.64.0",
@@ -21,6 +22,8 @@
     "axios": "^1.7.9",
     "next": "15.1.6",
     "postcss": "^8.5.1",
+    "postcss-preset-mantine": "^1.13.0",
+    "postcss-simple-vars": "^7.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swr": "^2.3.2",
