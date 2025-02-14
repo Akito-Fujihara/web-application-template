@@ -8,6 +8,7 @@ package di
 
 import (
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server"
+	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/middleware"
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/private"
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/public"
 	"github.com/Akito-Fujihara/web-application-template/app/config/env"
@@ -21,6 +22,12 @@ import (
 // Injectors from wire.go:
 
 func InitializeServer() (*server.Application, func(), error) {
+	corsConfig, err := env.CORSConfig()
+	if err != nil {
+		return nil, nil, err
+	}
+	middlewareFunc := middleware.NewCORS(corsConfig)
+	middlewareMiddlewareFunc := middleware.NewMiddlewareFunc(middlewareFunc)
 	iTodoRepository := repository.NewTodoRepository()
 	iTodoUsecase := usecase.NewTodoUsecase(iTodoRepository)
 	serverInterface := private.NewPrivateServer(iTodoUsecase)
@@ -44,7 +51,7 @@ func InitializeServer() (*server.Application, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	application := server.NewApplication(serverInterface, publicapiServerInterface, db)
+	application := server.NewApplication(middlewareMiddlewareFunc, serverInterface, publicapiServerInterface, db)
 	return application, func() {
 		cleanup()
 	}, nil

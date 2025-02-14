@@ -9,3 +9,5 @@ export MYSQL_READONLY_PASSWORD=password
 export REDIS_HOST=localhost
 export REDIS_PORT=6379
 export REDIS_PASSWORD=password
+
+export CORS_ALLOW_ORIGIN_URL=http://localhost:3000

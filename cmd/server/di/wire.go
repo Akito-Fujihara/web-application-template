@@ -7,6 +7,7 @@ import (
 	"github.com/google/wire"
 
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server"
+	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/middleware"
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/private"
 	"github.com/Akito-Fujihara/web-application-template/app/adapter/server/public"
 	"github.com/Akito-Fujihara/web-application-template/app/config/env"
@@ -26,6 +27,7 @@ func InitializeServer() (*server.Application, func(), error) {
 		repository.Set,
 		cacheclient.Set,
 		usecase.Set,
+		middleware.Set,
 		private.Set,
 		public.Set,
 		server.Set,
