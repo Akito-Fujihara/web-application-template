@@ -1,3 +1,5 @@
+'use client'
+
 import { Avatar, Button, Center, Container, Stack, Title } from '@mantine/core'
 
 export default function Home() {
@@ -21,10 +23,17 @@ export default function Home() {
             variant="filled"
             color="blue"
             fullWidth
+            onClick={() => (window.location.href = '/account/login')}
           >
             ログイン
           </Button>
-          <Button size="lg" variant="outline" color="blue" fullWidth>
+          <Button
+            size="lg"
+            variant="outline"
+            color="blue"
+            fullWidth
+            onClick={() => (window.location.href = '/account/signup')}
+          >
             新規アカウント作成
           </Button>
         </Stack>
