@@ -22,17 +22,22 @@ type Application struct {
 }
 
 func NewApplication(
-	m *middleware.MiddlewareFunc,
+	m middleware.IMiddlewareFunc,
 	privateServer privateapi.ServerInterface,
 	publicServer publicapi.ServerInterface,
 	db *gorm.DB,
 ) *Application {
 	e := echo.New()
 
-	e.Use(m.CORS)
+	e.Use(m.CORS())
 
-	privateapi.RegisterHandlers(e, privateServer)
-	publicapi.RegisterHandlers(e, publicServer)
+	privateApiGroup := e.Group("")
+	privateApiGroup.Use(m.ValidateSession())
+
+	publicApiGroup := e.Group("")
+
+	privateapi.RegisterHandlers(privateApiGroup, privateServer)
+	publicapi.RegisterHandlers(publicApiGroup, publicServer)
 
 	return &Application{
 		ApiServer: e,

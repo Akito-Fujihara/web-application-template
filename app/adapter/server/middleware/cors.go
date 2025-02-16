@@ -11,10 +11,10 @@ type CORSConfig struct {
 	AllowOrigins     []string
 }
 
-func NewCORS(config *CORSConfig) echo.MiddlewareFunc {
-	return middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: config.AllowOrigins,
+func (m *MiddlewareFunc) CORS() echo.MiddlewareFunc {
+	return echo.MiddlewareFunc(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: m.corsConfig.AllowOrigins,
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-	})
+	}))
 }

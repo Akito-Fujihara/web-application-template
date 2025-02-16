@@ -26,11 +26,6 @@ func InitializeServer() (*server.Application, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	middlewareFunc := middleware.NewCORS(corsConfig)
-	middlewareMiddlewareFunc := middleware.NewMiddlewareFunc(middlewareFunc)
-	iTodoRepository := repository.NewTodoRepository()
-	iTodoUsecase := usecase.NewTodoUsecase(iTodoRepository)
-	serverInterface := private.NewPrivateServer(iTodoUsecase)
 	config, err := env.CacheConfig()
 	if err != nil {
 		return nil, nil, err
@@ -40,6 +35,10 @@ func InitializeServer() (*server.Application, func(), error) {
 		return nil, nil, err
 	}
 	iCacheClient := cacheclient.NewCacheClient(client)
+	iMiddlewareFunc := middleware.NewMiddlewareFunc(corsConfig, iCacheClient)
+	iTodoRepository := repository.NewTodoRepository()
+	iTodoUsecase := usecase.NewTodoUsecase(iTodoRepository)
+	serverInterface := private.NewPrivateServer(iTodoUsecase)
 	iUserRepository := repository.NewUserRepository()
 	iAccountUsecase := usecase.NewAccountUsecase(iCacheClient, iUserRepository)
 	publicapiServerInterface := public.NewPublicServer(iAccountUsecase)
@@ -51,7 +50,7 @@ func InitializeServer() (*server.Application, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	application := server.NewApplication(middlewareMiddlewareFunc, serverInterface, publicapiServerInterface, db)
+	application := server.NewApplication(iMiddlewareFunc, serverInterface, publicapiServerInterface, db)
 	return application, func() {
 		cleanup()
 	}, nil
