@@ -1,7 +1,10 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios'
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL
-export const AXIOS_INSTANCE = Axios.create({ baseURL }) // use your own URL here or environment variable
+export const AXIOS_INSTANCE = Axios.create({
+  baseURL: baseURL,
+  withCredentials: true, // enable cookies/credentials
+})
 
 // add a second `options` argument here if you want to pass extra options to each generated query
 export const privateInstance = <T>(
